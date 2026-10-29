@@ -1,0 +1,86 @@
+# Automation ideas for the AromaTech Ambience, taken from real daily use.
+#
+# Paste one at a time: Settings -> Automations -> Create automation -> ⋮ ->
+# Edit in YAML. Entity IDs assume the device is named "Ambience" (the
+# default); adjust them if you renamed it.
+
+# 1. Ambient light: bright by day, a glow at night.
+#    Keeps whatever effect is selected (Warm, Cool, Flow) and only changes the
+#    brightness. Change the two times and levels to taste.
+- alias: Ambience - day and night light level
+  mode: restart
+  triggers:
+    - trigger: time
+      at: "07:00:00"
+      id: day
+    - trigger: time
+      at: "22:00:00"
+      id: night
+  conditions:
+    - condition: state
+      entity_id: light.ambience_light
+      state: "on"
+  actions:
+    - action: light.turn_on
+      target:
+        entity_id: light.ambience_light
+      data:
+        brightness_pct: "{{ 50 if trigger.id == 'day' else 5 }}"
+
+# 2. Pause scenting while nobody is home, then put it back as it was.
+#    A snapshot scene remembers whether scenting was on, so a diffuser you had
+#    switched off stays off when you return. Uses zone.home, whose state is
+#    the number of people at home.
+- alias: Ambience - pause scenting while away
+  mode: restart
+  triggers:
+    - trigger: numeric_state
+      entity_id: zone.home
+      below: 1
+      for: "00:30:00"
+      id: left
+    - trigger: numeric_state
+      entity_id: zone.home
+      above: 0
+      id: back
+  actions:
+    - choose:
+        - conditions:
+            - condition: trigger
+              id: left
+          sequence:
+            - action: scene.create
+              data:
+                scene_id: ambience_before_away
+                snapshot_entities:
+                  - switch.ambience_scenting
+            - action: switch.turn_off
+              target:
+                entity_id: switch.ambience_scenting
+        - conditions:
+            - condition: trigger
+              id: back
+            - condition: template
+              value_template: "{{ states('scene.ambience_before_away') not in ['unknown', 'unavailable'] }}"
+          sequence:
+            - action: scene.turn_on
+              target:
+                entity_id: scene.ambience_before_away
+
+# 3. Tell me when the diffuser has been out of reach for a while.
+#    The Ambience is reached over Bluetooth and advertises intermittently, so
+#    short gaps are normal; an hour without contact usually means it is
+#    unplugged or out of range of every adapter and proxy.
+- alias: Ambience - unreachable for an hour
+  triggers:
+    - trigger: state
+      entity_id: switch.ambience_scenting
+      to: unavailable
+      for: "01:00:00"
+  actions:
+    - action: notify.notify
+      data:
+        title: AromaTech Ambience
+        message: >-
+          The diffuser has been unreachable for an hour. Check that it is
+          plugged in and within range of a Bluetooth adapter or proxy.

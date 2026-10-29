@@ -1,0 +1,382 @@
+# Requires integration 0.6.1+, Bubble Card, and the optional management module.
+# Replace EVERY replace_me entity ID and REPLACE_WITH_CONFIG_ENTRY_ID.
+# See README.md for resource installation and an entity-ID checklist.
+# Add this vertical stack as ONE manual card; popup hashes must be unique per dashboard.
+type: vertical-stack
+cards:
+- type: custom:bubble-card
+  card_type: button
+  button_type: name
+  name: AromaTech
+  icon: mdi:scent
+  entity: switch.replace_me_scenting
+  show_state: true
+  card_layout: large
+  scrolling_effect: false
+  styles: |
+    .bubble-name {
+      white-space: nowrap !important;
+      overflow: hidden !important;
+      text-overflow: ellipsis !important;
+    }
+    .bubble-state {
+      white-space: normal !important;
+      font-size: 12px !important;
+      line-height: 14px !important;
+    }
+    ${(() => {
+      const read = id => hass.states[id]?.state;
+      const status = read('sensor.replace_me_bottle_refill_status');
+      const color = status === 'ok' ? 'var(--green-color)' : ['low','estimated_depleted'].includes(status) ? 'var(--red-color)' : ['refill_soon','needs_weighing','needs_calibration'].includes(status) ? 'var(--amber-color)' : 'var(--secondary-text-color)';
+      const scent = read('sensor.replace_me_installed_scent');
+      const percent = read('sensor.replace_me_bottle_oil_remaining');
+      const level = read('number.replace_me_intensity');
+      const valid = x => x != null && !['unknown','unavailable',''].includes(x);
+      const title = card.querySelector('.bubble-name');
+      const state = card.querySelector('.bubble-state');
+      const icon = card.querySelector('.bubble-icon');
+      if (title) title.innerText = 'AromaTech' + (valid(scent) ? ' · ' + scent : '');
+      const power = read('switch.replace_me_scenting');
+      const health = read('sensor.replace_me_bluetooth_health');
+      const clock = value => {
+        if (!/^\d{2}:\d{2}(:\d{2})?$/.test(value || '')) return null;
+        const [h, m] = value.split(':').map(Number);
+        return (h % 12 || 12) + (m ? ':' + String(m).padStart(2, '0') : '') + (h < 12 ? 'am' : 'pm');
+      };
+      const start = clock(read('time.replace_me_schedule_from'));
+      const end = clock(read('time.replace_me_schedule_to'));
+      const days = hass.states['sensor.replace_me_schedule']?.attributes?.days;
+      const dayText = Array.isArray(days) && days.length ? (new Set(days).size === 7 ? 'daily' : days.join(', ')) : 'days unavailable';
+      const schedule = read('switch.replace_me_always_on') === 'on' ? '24 hours' : read('switch.replace_me_schedule_enabled') === 'on' ? (start && end ? start + '–' + end + ' ' + dayText : 'Schedule unavailable') : read('switch.replace_me_schedule_enabled') === 'off' ? 'Schedule off' : 'Schedule unavailable';
+      const oil = valid(percent) && Number.isFinite(Number(percent)) ? 'Oil: ~' + Math.round(Number(percent)) + '%' : status === 'needs_weighing' ? 'Oil: needs weighing' : status === 'no_bottle' ? 'No bottle' : 'Oil: unavailable';
+      const connection = {healthy:'Connected', stale:'Connection stale', offline:'Disconnected'}[health] || 'Connection unknown';
+      if (state) state.innerText = (power === 'on' ? 'On' : power === 'off' ? 'Off' : 'Scenting unknown') + (valid(level) ? ' · Level ' + level : '') + ' · ' + schedule + ' · ' + oil + ' · ' + connection;
+      if (icon) icon.style.setProperty('color', color, 'important');
+      return '';
+    })()}
+  tap_action:
+    action: navigate
+    navigation_path: '#aromatech'
+  hold_action:
+    action: none
+  double_tap_action:
+    action: none
+  button_action:
+    tap_action:
+      action: navigate
+      navigation_path: '#aromatech'
+    hold_action:
+      action: none
+    double_tap_action:
+      action: none
+- type: custom:bubble-card
+  card_type: pop-up
+  hash: '#aromatech'
+  name: AromaTech
+  icon: mdi:scent
+  cards:
+  - type: custom:bubble-card
+    card_type: button
+    button_type: name
+    name: AromaTech
+    icon: mdi:scent
+    entity: switch.replace_me_scenting
+    show_state: true
+    card_layout: large
+    scrolling_effect: false
+    styles: |
+      .bubble-name {
+        white-space: nowrap !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+      }
+      .bubble-state {
+        white-space: normal !important;
+        font-size: 12px !important;
+        line-height: 14px !important;
+      }
+      ${(() => {
+        const read = id => hass.states[id]?.state;
+        const status = read('sensor.replace_me_bottle_refill_status');
+        const color = status === 'ok' ? 'var(--green-color)' : ['low','estimated_depleted'].includes(status) ? 'var(--red-color)' : ['refill_soon','needs_weighing','needs_calibration'].includes(status) ? 'var(--amber-color)' : 'var(--secondary-text-color)';
+        const scent = read('sensor.replace_me_installed_scent');
+        const percent = read('sensor.replace_me_bottle_oil_remaining');
+        const level = read('number.replace_me_intensity');
+        const valid = x => x != null && !['unknown','unavailable',''].includes(x);
+        const title = card.querySelector('.bubble-name');
+        const state = card.querySelector('.bubble-state');
+        const icon = card.querySelector('.bubble-icon');
+        if (title) title.innerText = 'AromaTech' + (valid(scent) ? ' · ' + scent : '');
+        const power = read('switch.replace_me_scenting');
+        const health = read('sensor.replace_me_bluetooth_health');
+        const clock = value => {
+          if (!/^\d{2}:\d{2}(:\d{2})?$/.test(value || '')) return null;
+          const [h, m] = value.split(':').map(Number);
+          return (h % 12 || 12) + (m ? ':' + String(m).padStart(2, '0') : '') + (h < 12 ? 'am' : 'pm');
+        };
+        const start = clock(read('time.replace_me_schedule_from'));
+        const end = clock(read('time.replace_me_schedule_to'));
+        const days = hass.states['sensor.replace_me_schedule']?.attributes?.days;
+        const dayText = Array.isArray(days) && days.length ? (new Set(days).size === 7 ? 'daily' : days.join(', ')) : 'days unavailable';
+        const schedule = read('switch.replace_me_always_on') === 'on' ? '24 hours' : read('switch.replace_me_schedule_enabled') === 'on' ? (start && end ? start + '–' + end + ' ' + dayText : 'Schedule unavailable') : read('switch.replace_me_schedule_enabled') === 'off' ? 'Schedule off' : 'Schedule unavailable';
+        const oil = valid(percent) && Number.isFinite(Number(percent)) ? 'Oil: ~' + Math.round(Number(percent)) + '%' : status === 'needs_weighing' ? 'Oil: needs weighing' : status === 'no_bottle' ? 'No bottle' : 'Oil: unavailable';
+        const connection = {healthy:'Connected', stale:'Connection stale', offline:'Disconnected'}[health] || 'Connection unknown';
+        if (state) state.innerText = (power === 'on' ? 'On' : power === 'off' ? 'Off' : 'Scenting unknown') + (valid(level) ? ' · Level ' + level : '') + ' · ' + schedule + ' · ' + oil + ' · ' + connection;
+        if (icon) icon.style.setProperty('color', color, 'important');
+        return '';
+      })()}
+    tap_action:
+      action: navigate
+      navigation_path: '#aromatech-manage'
+    hold_action:
+      action: none
+    double_tap_action:
+      action: none
+    button_action:
+      tap_action:
+        action: navigate
+        navigation_path: '#aromatech-manage'
+      hold_action:
+        action: none
+      double_tap_action:
+        action: none
+  - type: entities
+    show_header_toggle: false
+    entities:
+    - entity: sensor.replace_me_estimated_oil_remaining
+      name: Oil remaining (estimated)
+    - entity: sensor.replace_me_estimated_days_remaining
+      name: Days remaining (estimated)
+    - type: conditional
+      conditions:
+      - condition: state
+        entity: sensor.replace_me_bluetooth_health
+        state:
+        - healthy
+        - stale
+        - offline
+      row:
+        entity: sensor.replace_me_bluetooth_health
+        name: Connection health
+  - type: markdown
+    content: >-
+      {% set status = states('sensor.replace_me_bottle_refill_status') %}
+      {% if status == 'needs_weighing' %}
+      Weigh the bottle, then record its weight in **Manage scents & bottles**
+      to refresh the oil and days remaining estimates.
+      {% elif status == 'no_bottle' %}
+      Select your installed bottle in **Manage scents & bottles** to track oil remaining.
+      {% elif status == 'needs_calibration' %}
+      Record a new bottle weight in **Manage scents & bottles** to improve the usage estimate.
+      {% elif status in ['low', 'estimated_depleted', 'refill_soon'] %}
+      Oil is running low. Check the bottle and prepare a refill or replacement.
+      Record the change in **Manage scents & bottles**.
+      {% else %}
+      Oil and days remaining are estimates. Record a bottle weight in
+      **Manage scents & bottles** whenever you want to refresh them.
+      {% endif %}
+      {% if states('sensor.replace_me_bluetooth_health') in ['stale', 'offline', 'unknown', 'unavailable'] %}
+      Connection not confirmed. Check the diffuser's power and Bluetooth connection;
+      it may still be scenting on its saved schedule.
+      {% endif %}
+  - type: custom:bubble-card
+    card_type: button
+    button_type: name
+    name: Manage scents & bottles
+    icon: mdi:bottle-tonic-outline
+    card_layout: large
+    scrolling_effect: false
+    tap_action:
+      action: navigate
+      navigation_path: '#aromatech-manage'
+    button_action:
+      tap_action:
+        action: navigate
+        navigation_path: '#aromatech-manage'
+  - type: entities
+    title: Scenting controls
+    show_header_toggle: false
+    entities:
+    - entity: switch.replace_me_scenting
+      name: Scenting
+    - entity: number.replace_me_intensity
+      name: Intensity
+    - entity: switch.replace_me_sound
+      name: Sound
+  - type: tile
+    entity: light.replace_me_light
+    name: Ambient light
+    icon: mdi:lightbulb
+    grid_options:
+      columns: 12
+    tap_action:
+      action: more-info
+    icon_tap_action:
+      action: perform-action
+      perform_action: light.turn_on
+      target:
+        entity_id: light.replace_me_light
+      data:
+        effect: Warm
+    features:
+    - type: light-effect
+      effects:
+      - Warm
+      - Cool
+      - Flow
+      - 'Off'
+    - type: light-color-favorites
+  - type: conditional
+    conditions:
+    - condition: state
+      entity: switch.replace_me_always_on
+      state:
+      - "on"
+      - "off"
+    card:
+      type: custom:bubble-card
+      card_type: button
+      button_type: switch
+      entity: switch.replace_me_always_on
+      name: Always on · 24 hours
+      icon: mdi:clock-time-eight-outline
+      show_state: true
+      card_layout: large
+      scrolling_effect: false
+      tap_action:
+        action: toggle
+      button_action:
+        tap_action:
+          action: toggle
+  - type: conditional
+    conditions:
+    - condition: template
+      value_template: "{{ states('switch.replace_me_always_on') not in ['on', 'off'] }}"
+    card:
+      type: markdown
+      content: >-
+        **Always on:** install a compatible integration version with the Always on switch to use this
+        control. If already installed, wait for the diffuser to reconnect.
+  - type: conditional
+    conditions:
+    - condition: template
+      value_template: "{{ not is_state('switch.replace_me_always_on', 'on') }}"
+    card:
+      type: entities
+      title: Schedule
+      show_header_toggle: false
+      entities:
+      - entity: switch.replace_me_schedule_enabled
+        name: Schedule enabled
+      - entity: time.replace_me_schedule_from
+        name: Start
+      - entity: time.replace_me_schedule_to
+        name: End
+      - entity: sensor.replace_me_schedule
+        name: Days
+        type: simple-entity
+  - type: conditional
+    conditions:
+    - condition: state
+      entity: switch.replace_me_always_on
+      state: "on"
+    card:
+      type: entities
+      title: Schedule · paused by Always on
+      show_header_toggle: false
+      card_mod:
+        style: |
+          ha-card { opacity: 0.5; }
+      entities:
+      - type: attribute
+        entity: switch.replace_me_always_on
+        attribute: saved_enabled
+        name: Schedule enabled
+        icon: mdi:calendar-check
+        tap_action:
+          action: none
+      - type: attribute
+        entity: switch.replace_me_always_on
+        attribute: saved_start
+        name: Start
+        icon: mdi:clock-start
+        tap_action:
+          action: none
+      - type: attribute
+        entity: switch.replace_me_always_on
+        attribute: saved_end
+        name: End
+        icon: mdi:clock-end
+        tap_action:
+          action: none
+      - type: attribute
+        entity: switch.replace_me_always_on
+        attribute: saved_days
+        name: Days
+        icon: mdi:calendar-week
+        tap_action:
+          action: none
+  - type: conditional
+    conditions:
+    - condition: template
+      value_template: "{{ state_attr('switch.replace_me_always_on', 'restore_pending') == true }}"
+    card:
+      type: custom:bubble-card
+      card_type: button
+      button_type: name
+      entity: switch.replace_me_always_on
+      name: Finish restoring saved schedule
+      icon: mdi:backup-restore
+      card_layout: large
+      tap_action:
+        action: perform-action
+        perform_action: switch.turn_off
+        target:
+          entity_id: switch.replace_me_always_on
+      button_action:
+        tap_action:
+          action: perform-action
+          perform_action: switch.turn_off
+          target:
+            entity_id: switch.replace_me_always_on
+  - type: markdown
+    content: >-
+      **Always on** repeats the selected intensity's spray/pause cycle every day.
+      Turn it off to restore your saved schedule. **Scenting** remains the master
+      on/off control. Enable **Experimental schedule writes** in integration
+      options before first use; full-day operation still needs physical validation.
+  - type: markdown
+    content: Scenting shows whether the diffuser is enabled. The device controls its spray intervals; on does not mean continuous
+      spraying.
+- type: custom:bubble-card
+  card_type: pop-up
+  hash: '#aromatech-manage'
+  name: Scents & bottles
+  icon: mdi:bottle-tonic-outline
+  cards:
+  - type: custom:bubble-card
+    card_type: button
+    button_type: name
+    name: Back to AromaTech
+    icon: mdi:arrow-left
+    card_layout: large
+    tap_action:
+      action: navigate
+      navigation_path: '#aromatech'
+    button_action:
+      tap_action:
+        action: navigate
+        navigation_path: '#aromatech'
+  - type: custom:aromatech-inventory-card
+    mode: manage
+    management_path: "#aromatech-manage"
+    entry_id: REPLACE_WITH_CONFIG_ENTRY_ID
+    entities:
+      scent: sensor.replace_me_installed_scent
+      intensity: number.replace_me_intensity
+      percent: sensor.replace_me_bottle_oil_remaining
+      status: sensor.replace_me_bottle_refill_status
+      power: switch.replace_me_scenting
+      mass: sensor.replace_me_estimated_oil_remaining
+      days: sensor.replace_me_estimated_days_remaining
+      sprays: sensor.replace_me_bottle_estimated_sprays

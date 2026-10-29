@@ -1,0 +1,82 @@
+# A complete AromaTech Ambience card, using only core Home Assistant cards.
+#
+# Paste into a dashboard: Edit dashboard -> Add card -> Manual.
+# Entity IDs assume the device is named "Ambience" (the default). If you
+# renamed it, adjust the IDs, e.g. "Living room diffuser" gives
+# switch.living_room_diffuser_scenting.
+#
+# This is the card shown in images/dashboard-popup.png. There it sits inside a
+# Bubble Card pop-up (custom:bubble-card, from HACS); see the note at the end.
+
+type: vertical-stack
+cards:
+  - type: markdown
+    content: |-
+      **AromaTech Ambience** · scenting {{ states('switch.ambience_scenting') }} · intensity {{ states('number.ambience_intensity') }} / 4
+
+      Schedule {{ states('switch.ambience_schedule_enabled') }} · {{ states('time.ambience_schedule_from')[:5] }}–{{ states('time.ambience_schedule_to')[:5] }}
+
+  - type: entities
+    title: Scenting controls
+    show_header_toggle: false
+    entities:
+      - entity: switch.ambience_scenting
+        name: Scenting
+      - entity: number.ambience_intensity
+        name: Intensity
+      - entity: switch.ambience_sound
+        name: Sound
+
+  - type: tile
+    entity: light.ambience_light
+    name: Ambient light
+    icon: mdi:lightbulb
+    tap_action:
+      action: more-info
+    # Tapping the bulb icon turns the lamp on in the Warm preset.
+    icon_tap_action:
+      action: perform-action
+      perform_action: light.turn_on
+      target:
+        entity_id: light.ambience_light
+      data:
+        effect: Warm
+    features:
+      - type: light-effect
+        effects:
+          - Warm
+          - Cool
+          - Flow
+          - "Off"
+      - type: light-color-favorites
+
+  - type: entities
+    title: Schedule
+    show_header_toggle: false
+    entities:
+      - entity: switch.ambience_schedule_enabled
+        name: Schedule enabled
+      - entity: time.ambience_schedule_from
+        name: Start
+      - entity: time.ambience_schedule_to
+        name: End
+      - entity: sensor.ambience_schedule
+        name: Days
+        type: simple-entity
+
+  - type: markdown
+    content: >-
+      Scenting shows whether the diffuser is enabled. The device controls its
+      spray intervals; on does not mean continuous spraying.
+
+# As a pop-up with Bubble Card (optional, install "Bubble Card" from HACS):
+# wrap the cards above like this and open it from any button with
+# navigation_path: "#aromatech".
+#
+#   type: custom:bubble-card
+#   card_type: pop-up
+#   hash: "#aromatech"
+#   name: AromaTech
+#   icon: mdi:scent
+#   cards:
+#     - ...the five cards above...

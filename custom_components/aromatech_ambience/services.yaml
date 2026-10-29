@@ -1,0 +1,183 @@
+set_schedule:
+  fields:
+    config_entry_id:
+      required: true
+      selector:
+        config_entry:
+          integration: aromatech_ambience
+    slot:
+      required: true
+      selector:
+        number:
+          min: 1
+          max: 5
+          step: 1
+          mode: box
+    start:
+      example: "08:30"
+      selector:
+        text:
+    end:
+      example: "18:00"
+      selector:
+        text:
+    days_mask:
+      selector:
+        number:
+          min: 0
+          max: 127
+          step: 1
+          mode: box
+    enabled:
+      selector:
+        boolean:
+    intensity:
+      selector:
+        number:
+          min: 1
+          max: 4
+          step: 1
+          mode: box
+delete_schedule:
+  fields:
+    config_entry_id:
+      required: true
+      selector:
+        config_entry:
+          integration: aromatech_ambience
+    slot:
+      required: true
+      selector:
+        number:
+          min: 1
+          max: 5
+          step: 1
+          mode: box
+manage_inventory:
+  fields:
+    config_entry_id:
+      required: true
+      selector:
+        config_entry:
+          integration: aromatech_ambience
+    action:
+      required: true
+      selector:
+        select:
+          options:
+            - add_scent
+            - edit_scent
+            - delete_scent
+            - add_bottle
+            - edit_bottle
+            - install_bottle
+            - store_bottle
+            - refill_bottle
+            - record_weight
+            - correct_weight
+            - archive_bottle
+            - delete_bottle
+    scent_id:
+      selector:
+        text:
+    bottle_id:
+      selector:
+        text:
+    name:
+      selector:
+        text:
+    brand:
+      selector:
+        text:
+    notes:
+      selector:
+        text:
+          multiline: true
+    reason:
+      selector:
+        text:
+    empty_g:
+      selector:
+        number:
+          min: 0
+          max: 10000
+          step: 0.01
+          unit_of_measurement: g
+          mode: box
+    gross_g:
+      selector:
+        number:
+          min: 0
+          max: 10000
+          step: 0.01
+          unit_of_measurement: g
+          mode: box
+    oil_g:
+      selector:
+        number:
+          min: 0
+          max: 10000
+          step: 0.01
+          unit_of_measurement: g
+          mode: box
+    grams_per_spray:
+      selector:
+        number:
+          min: 0
+          max: 10000
+          step: any
+          unit_of_measurement: g
+          mode: box
+    spray_seconds:
+      selector:
+        number:
+          min: 0
+          max: 10000
+          step: 0.01
+          unit_of_measurement: s
+          mode: box
+    archived:
+      selector:
+        boolean:
+    confirm:
+      selector:
+        boolean:
+list_inventory:
+  fields:
+    config_entry_id:
+      required: true
+      selector:
+        config_entry:
+          integration: aromatech_ambience
+acknowledge_refill:
+  fields:
+    config_entry_id:
+      required: true
+      selector:
+        config_entry:
+          integration: aromatech_ambience
+record_bottle_weight:
+  fields:
+    config_entry_id:
+      required: true
+      selector:
+        config_entry:
+          integration: aromatech_ambience
+    gross_g:
+      required: true
+      selector:
+        number:
+          min: 0.01
+          max: 10000
+          step: 0.01
+          unit_of_measurement: g
+          mode: box
+    empty_g:
+      required: true
+      selector:
+        number:
+          min: 0
+          max: 10000
+          step: 0.01
+          unit_of_measurement: g
+          mode: box

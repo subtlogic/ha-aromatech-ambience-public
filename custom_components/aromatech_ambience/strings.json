@@ -1,0 +1,393 @@
+{
+  "config": {
+    "flow_title": "{name}",
+    "step": {
+      "confirm": {
+        "description": "Add {name} ({address})?"
+      },
+      "user": {
+        "data": {
+          "address": "Device"
+        }
+      }
+    },
+    "abort": {
+      "already_configured": "This diffuser is already set up",
+      "no_devices_found": "No Ambience diffuser was heard recently. It advertises intermittently, so try again in a minute, and check it is in range of a Bluetooth proxy.",
+      "not_supported": "That device is not an AromaTech Ambience"
+    }
+  },
+  "entity": {
+    "switch": {
+      "power": {
+        "name": "Scenting"
+      },
+      "sound": {
+        "name": "Sound"
+      },
+      "schedule_enabled": {
+        "name": "Schedule enabled"
+      },
+      "day_mon": {
+        "name": "Schedule 1 Mon"
+      },
+      "day_tue": {
+        "name": "Schedule 2 Tue"
+      },
+      "day_wed": {
+        "name": "Schedule 3 Wed"
+      },
+      "day_thu": {
+        "name": "Schedule 4 Thu"
+      },
+      "day_fri": {
+        "name": "Schedule 5 Fri"
+      },
+      "day_sat": {
+        "name": "Schedule 6 Sat"
+      },
+      "day_sun": {
+        "name": "Schedule 7 Sun"
+      }
+    },
+    "sensor": {
+      "schedule": {
+        "name": "Schedule"
+      }
+    },
+    "light": {
+      "light": {
+        "name": "Light"
+      }
+    },
+    "number": {
+      "intensity": {
+        "name": "Intensity"
+      }
+    },
+    "time": {
+      "schedule_start": {
+        "name": "Schedule from"
+      },
+      "schedule_end": {
+        "name": "Schedule to"
+      }
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Ambience options",
+        "menu_options": {
+          "settings": "Settings",
+          "add_scent": "Add scent",
+          "edit_scent": "Edit scent",
+          "delete_scent": "Delete scent",
+          "add_bottle": "Add bottle",
+          "edit_bottle": "Edit bottle",
+          "install_bottle": "Install bottle",
+          "store_bottle": "Store active bottle",
+          "record_weight": "Weigh bottle",
+          "correct_weight": "Correct a measurement",
+          "refill_bottle": "Refill or change scent",
+          "archive_bottle": "Archive or restore bottle",
+          "delete_bottle": "Permanently delete bottle",
+          "acknowledge": "Acknowledge refill alert"
+        }
+      },
+      "settings": {
+        "title": "Settings",
+        "data": {
+          "scan_interval": "Heartbeat interval (seconds)",
+          "experimental_schedule_writes": "Experimental multi-slot, append and delete writes",
+          "refill_notifications": "Enable persistent refill notifications",
+          "refill_days": "Refill-soon threshold (days)",
+          "low_oil_g": "Low-oil threshold (g)",
+          "depleted_oil_g": "Estimated-depleted threshold (g)"
+        },
+        "description": "Choose how often to poll the diffuser. Each poll briefly occupies a Bluetooth connection. Experimental schedule writes default to off and have not been validated on hardware; they are required for append, delete, or editing a list with multiple slots. Forecasts assume the recurring weekly schedule continues. Notifications default off and never stop the diffuser. Low-oil threshold must be greater than the depleted threshold."
+      },
+      "add_scent": {
+        "title": "Add scent",
+        "description": "Enter a scent name to use the approximate default of 4 mg per 5 seconds of spraying. Optionally enter both custom rate fields. Oil and device differences affect actual consumption; later eligible weighings can refine the rate.",
+        "data": {
+          "name": "Name",
+          "brand": "Brand",
+          "notes": "Notes",
+          "grams_per_spray": "Provisional grams per spray",
+          "spray_seconds": "Reference spray duration (seconds)"
+        }
+      },
+      "edit_scent": {
+        "title": "Edit scent",
+        "description": "Only entered fields change. Renaming preserves history. Supply both rate fields together; the default rate applies to future fills only.",
+        "data": {
+          "scent_id": "Scent",
+          "name": "Name",
+          "brand": "Brand",
+          "notes": "Notes",
+          "grams_per_spray": "Provisional grams per spray",
+          "spray_seconds": "Reference spray duration (seconds)"
+        }
+      },
+      "delete_scent": {
+        "title": "Delete scent",
+        "description": "Permanently delete this scent. Scents referenced by bottle history cannot be deleted.",
+        "data": {
+          "scent_id": "Scent",
+          "confirm": "Confirm permanent deletion"
+        }
+      },
+      "add_bottle": {
+        "title": "Add bottle",
+        "description": "Choose 30, 60 or 120 (default 60), or enter a custom amount. Presets approximate the labeled bottle size as grams of oil, not measured mass. Custom oil amount or measured gross weight overrides the preset. Gross weight requires a known empty bottle weight. Weighing improves accuracy.",
+        "data": {
+          "scent_id": "Scent",
+          "name": "Name",
+          "empty_g": "Empty bottle weight (g, optional)",
+          "notes": "Notes",
+          "oil_g": "Custom oil amount (g, optional)",
+          "gross_g": "Measured bottle plus oil weight (g, optional)",
+          "bottle_size": "Bottle size (approximate starting amount)"
+        }
+      },
+      "edit_bottle": {
+        "title": "Edit bottle",
+        "description": "Only entered fields change. Leave unknown empty weight blank; zero means a measured zero tare. Set the actual empty bottle weight before recording gross weight, then use Weigh bottle to refresh the oil balance. Renaming preserves history.",
+        "data": {
+          "bottle_id": "Bottle",
+          "name": "Name",
+          "empty_g": "Empty bottle weight (g)",
+          "notes": "Notes"
+        }
+      },
+      "install_bottle": {
+        "title": "Install bottle",
+        "description": "Turn scenting off and physically install this bottle. A fresh power-off report is required. Stored balances are preserved.",
+        "data": {
+          "bottle_id": "Bottle"
+        }
+      },
+      "store_bottle": {
+        "title": "Store active bottle",
+        "description": "Turn scenting off before removing the active bottle. A fresh power-off report is required.",
+        "data": {
+          "bottle_id": "Bottle"
+        }
+      },
+      "record_weight": {
+        "title": "Weigh bottle",
+        "description": "Record current gross weight using the saved empty bottle weight. If it is unknown, enter it under Edit bottle first. A fresh weighing anchors remaining oil; two eligible weighings can refine the estimated consumption rate.",
+        "data": {
+          "bottle_id": "Bottle",
+          "gross_g": "Bottle plus oil weight (g)"
+        }
+      },
+      "correct_weight": {
+        "title": "Correct a measurement",
+        "description": "Enter the corrected current gross weight and a reason. The previous measurement is retained; past usage is not rewritten.",
+        "data": {
+          "bottle_id": "Bottle",
+          "gross_g": "Bottle plus oil weight (g)",
+          "reason": "Correction reason"
+        }
+      },
+      "refill_bottle": {
+        "title": "Refill or change scent",
+        "description": "Store the bottle first. Choose 30, 60 or 120 (default 60), or enter a custom amount. Presets approximate the labeled bottle size as grams of oil, not measured mass. Custom oil amount or measured gross weight overrides the preset. Gross weight requires a known empty bottle weight. Weighing improves accuracy.",
+        "data": {
+          "scent_id": "Scent",
+          "bottle_id": "Bottle",
+          "oil_g": "Custom oil amount (g, optional)",
+          "gross_g": "Measured bottle plus oil weight (g, optional)",
+          "bottle_size": "Bottle size (approximate starting amount)"
+        }
+      },
+      "archive_bottle": {
+        "title": "Archive or restore bottle",
+        "description": "Archive a stored bottle or clear Archived to restore it. The active bottle cannot be archived.",
+        "data": {
+          "bottle_id": "Bottle",
+          "archived": "Archived"
+        }
+      },
+      "delete_bottle": {
+        "title": "Permanently delete bottle",
+        "description": "Permanently delete the selected bottle and all its fill and weighing history. This cannot be undone. The active bottle cannot be deleted.",
+        "data": {
+          "bottle_id": "Bottle",
+          "confirm": "Confirm permanent deletion"
+        }
+      },
+      "acknowledge": {
+        "title": "Acknowledge refill alert",
+        "description": "Acknowledge the current refill alert. This does not refill the bottle or stop scenting.",
+        "data": {}
+      }
+    },
+    "error": {
+      "threshold_order": "Low-oil threshold must be greater than the depleted threshold.",
+      "invalid_input": "Check the selected item and entered values.",
+      "confirmation_required": "Confirm permanent deletion to continue.",
+      "one_weight": "Enter either gross weight or oil mass, not both.",
+      "operation_failed": "Could not save: {error}"
+    },
+    "abort": {
+      "not_loaded": "This integration is not loaded. Load it before managing inventory."
+    }
+  },
+  "services": {
+    "set_schedule": {
+      "name": "Set schedule",
+      "description": "Edit an existing slot or append at the next position. Appending requires every field and experimental writes enabled. Multi-slot writes are hardware-unvalidated.",
+      "fields": {
+        "config_entry_id": {
+          "name": "Integration entry",
+          "description": "Loaded AromaTech Ambience config entry ID."
+        },
+        "slot": {
+          "name": "Slot",
+          "description": "One-based schedule position, 1\u20135."
+        },
+        "start": {
+          "name": "Start",
+          "description": "Local start time in HH:MM format."
+        },
+        "end": {
+          "name": "End",
+          "description": "Local end time in HH:MM format, later than start."
+        },
+        "days_mask": {
+          "name": "Days mask",
+          "description": "Weekday bits 0\u2013127; Sunday bit 0 remains inferred. Enable separately."
+        },
+        "enabled": {
+          "name": "Enabled",
+          "description": "Whether this slot is enabled."
+        },
+        "intensity": {
+          "name": "Intensity",
+          "description": "Schedule intensity, 1\u20134."
+        }
+      }
+    },
+    "delete_schedule": {
+      "name": "Delete schedule",
+      "description": "Delete a slot and shift later slots down. Requires experimental writes; hardware-unvalidated.",
+      "fields": {
+        "config_entry_id": {
+          "name": "Integration entry",
+          "description": "Loaded AromaTech Ambience config entry ID."
+        },
+        "slot": {
+          "name": "Slot",
+          "description": "One-based schedule position, 1\u20135."
+        }
+      }
+    },
+    "record_bottle_weight": {
+      "name": "Record bottle weight",
+      "description": "Legacy alpha checkpoint before inventory is first installed. After that, use Manage bottle inventory with Record weight.",
+      "fields": {
+        "config_entry_id": {
+          "name": "Integration entry",
+          "description": "Loaded AromaTech Ambience config entry ID."
+        },
+        "gross_g": {
+          "name": "Bottle plus oil",
+          "description": "Gross weight in grams, positive and no more than 10000."
+        },
+        "empty_g": {
+          "name": "Empty bottle",
+          "description": "Empty-bottle weight in grams, from zero to gross weight."
+        }
+      }
+    },
+    "manage_inventory": {
+      "name": "Manage bottle inventory",
+      "description": "Create, name, edit, install, store, weigh, refill or archive bottles and scents. Install/store require scenting off. Metadata changes do not control the diffuser.",
+      "fields": {
+        "config_entry_id": {
+          "name": "Integration entry",
+          "description": "The loaded diffuser whose bottle inventory to manage."
+        },
+        "action": {
+          "name": "Operation",
+          "description": "Use the native integration options forms for guided management, or select an operation here."
+        },
+        "scent_id": {
+          "name": "Scent ID",
+          "description": "Stable ID returned by List inventory."
+        },
+        "bottle_id": {
+          "name": "Bottle ID",
+          "description": "Stable ID returned by List inventory."
+        },
+        "name": {
+          "name": "Display name",
+          "description": "Renaming preserves the stable ID, usage and history."
+        },
+        "brand": {
+          "name": "Brand",
+          "description": "Optional scent brand."
+        },
+        "notes": {
+          "name": "Notes",
+          "description": "Optional notes."
+        },
+        "reason": {
+          "name": "Correction reason",
+          "description": "Required for correcting a measurement; previous measurements remain in history."
+        },
+        "empty_g": {
+          "name": "Empty bottle weight",
+          "description": "Optional on new bottles; omitted means unknown, not zero. Required before gross weighing. Editing tare requires a fresh weighing."
+        },
+        "gross_g": {
+          "name": "Gross bottle weight",
+          "description": "Grams including bottle and oil; use the same cap/components each time."
+        },
+        "oil_g": {
+          "name": "Oil weight",
+          "description": "Oil amount in grams, measured or approximate. For add/refill, omitted oil and gross weight defaults to an approximate 60 g. Supply this or gross weight, not both."
+        },
+        "grams_per_spray": {
+          "name": "Grams per reference spray",
+          "description": "Custom provisional consumption in grams; supply reference duration too. New scents with both rate fields omitted use 0.004 g per 5 seconds. Existing rates are preserved when editing without rate fields."
+        },
+        "spray_seconds": {
+          "name": "Reference spray duration",
+          "description": "Seconds actively spraying in the reference measurement."
+        },
+        "archived": {
+          "name": "Archived",
+          "description": "Archive or restore a stored bottle while retaining its history."
+        },
+        "confirm": {
+          "name": "Confirm permanent deletion",
+          "description": "Required for delete operations. Bottle deletion removes its fill history permanently."
+        }
+      }
+    },
+    "list_inventory": {
+      "name": "List bottle inventory",
+      "description": "Return bottle, scent and fill history plus current estimate; no device command.",
+      "fields": {
+        "config_entry_id": {
+          "name": "Integration entry",
+          "description": "The loaded diffuser to use."
+        }
+      }
+    },
+    "acknowledge_refill": {
+      "name": "Acknowledge refill alert",
+      "description": "Dismiss and acknowledge the current refill status until recovery or a changed status.",
+      "fields": {
+        "config_entry_id": {
+          "name": "Integration entry",
+          "description": "The loaded diffuser to use."
+        }
+      }
+    }
+  }
+}
