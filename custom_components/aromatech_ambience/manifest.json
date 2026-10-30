@@ -6,7 +6,7 @@
       "local_name": "Ambience*"
     }
   ],
-  "codeowners": ["@subtlogic/maintainers"],
+  "codeowners": ["@subtlogic"],
   "config_flow": true,
   "dependencies": ["bluetooth_adapters"],
   "documentation": "https://github.com/subtlogic/ha-aromatech-ambience-public",

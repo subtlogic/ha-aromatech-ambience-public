@@ -1,5 +1,7 @@
 # AromaTech Ambience for Home Assistant
 
+Maintained by [subtlogic](https://github.com/subtlogic).
+
 Local Bluetooth control of the **AromaTech Ambience** scent diffuser. No cloud,
 no vendor account. It works through a local Bluetooth adapter or ESPHome
 Bluetooth proxies.
