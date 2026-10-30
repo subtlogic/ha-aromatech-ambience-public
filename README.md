@@ -6,7 +6,7 @@ Local Bluetooth control of the **AromaTech Ambience** scent diffuser. No cloud,
 no vendor account. It works through a local Bluetooth adapter or ESPHome
 Bluetooth proxies.
 
-## 0.6.2 — simple setup and estimated oil tracking
+## Simple setup and estimated oil tracking
 
 Enter a scent name to start with an approximate **4 mg per 5 seconds of spraying**
 rate. Choose a **30 / 60 / 120** bottle-size preset (60 selected by default), or
@@ -24,8 +24,7 @@ refill status and connection health. Technical counters and timing sensors are
 optional diagnostics, disabled by default for new entity registrations. Existing
 entities keep their IDs and enabled/disabled choices; upgrades do not remove them.
 
-See [0.6.2 release notes](docs/releases/0.6.2.md) and the
-[feature and validation limits](docs/releases/0.6.1.md).
+See the [changelog](CHANGELOG.md) for release changes.
 Take a Home Assistant backup before upgrading. The inventory format retains
 accounting checkpoints and now permits bottles with unknown tare. Returning to
 b5 or earlier requires the matching pre-upgrade inventory backup if new default-rate scents or unweighed
@@ -249,28 +248,17 @@ normal; the integration retries on the next heartbeat.
 - The weekday bit order (bit 0 = Sunday) is inferred. Please open an issue if
   the day switches do not match the vendor app.
 
-## Roadmap
-
-See [the development plan](docs/DEVELOPMENT_PLAN.md) for acceptance work.
-Firmware availability checks and OTA installation are deferred by explicit
-user choice; this candidate adds neither cloud requests nor firmware actions.
+Firmware availability checks and OTA installation are not supported.
 
 Ideas and reports are welcome in
 [issues](https://github.com/subtlogic/ha-aromatech-ambience-public/issues).
 
 ## Development
 
-```
-python -m unittest discover -s tests -v
-```
+See [validation](docs/VALIDATION.md) for setup and test commands.
 
-The tests stub Home Assistant, so they run without it installed. Install voluptuous
-in your development environment to run the native-form/service schema cases;
-the dependency-free lane explicitly skips those cases. Also run
-`node --test tests/aromatech-inventory-card.test.mjs` for the optional dashboard form.
-
-The brand images in `custom_components/aromatech_ambience/brand/` are drawn by
-`tools/brand/draw_brand.py` (needs Pillow; pass `--font` off macOS).
+Original diffuser artwork, including high-resolution icons and light/dark logos,
+is bundled in `custom_components/aromatech_ambience/brand/`.
 
 ## License
 

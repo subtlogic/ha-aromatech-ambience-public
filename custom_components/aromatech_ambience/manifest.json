@@ -6,6 +6,7 @@
       "local_name": "Ambience*"
     }
   ],
+  "categories": ["appliances_cleaning"],
   "codeowners": ["@subtlogic"],
   "config_flow": true,
   "dependencies": ["bluetooth_adapters"],
@@ -15,5 +16,5 @@
   "issue_tracker": "https://github.com/subtlogic/ha-aromatech-ambience-public/issues",
   "loggers": ["bleak_retry_connector"],
   "requirements": ["bleak-retry-connector>=3.5.0"],
-  "version": "0.6.2"
+  "version": "0.6.3"
 }

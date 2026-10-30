@@ -3,3 +3,9 @@ __pycache__/
 .venv/
 .pytest_cache/
 .DS_Store
+
+# Local development and release coordination
+.basecamp/
+.loop/
+docs/agents/
+STRUCTURE.md
